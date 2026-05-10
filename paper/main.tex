@@ -1,0 +1,120 @@
+\documentclass[12pt]{article}
+
+% Packages
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{setspace}
+\usepackage{caption}
+\usepackage[round]{natbib}
+\usepackage{dcolumn}
+
+\bibliographystyle{apalike}
+\doublespacing
+
+\title{Energy Drinks and Body Mass Index: Aggregated Effects of Energy Drink Consumption on Physical Health}
+\author{Connor Durand \\ \href{mailto:connor.durand@westpoint.edu}{connor.durand@westpoint.edu}}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Energy drink consumption is on the rise, along with media reporting associated with health risks. By controlling various demographic and lifestyle factors, the effect of energy drinks on BMI can be isolated. Findings demonstrate a statistically and economically significant positive association between energy drinks and BMI after controlling for both factors known to affect BMI (age, gender, etc.), and those with unstudied impacts. However, without physical activity controls, the effects are unable to prove causality.
+\end{abstract}
+
+\newpage
+
+\section{Introduction and Motivation}
+
+Energy drinks have become increasingly popular within the United States. The global market of energy drinks in 2023 reached 73.81 billion US dollars and is expected to increase by an additional 7.9\% by 2030 \citep{grandview2024}. At the same time, rates of obesity within the United States have been increasing and are continuing to trend upwards. The Milkin Institute calculating that obesity within the United States in 2018 accounted for 6.76\% of the national GDP, approximately 1.4 trillion USD \citep{lopez2020}. With these concurrent increases and parallel trends within the U.S., this research aims to build off existing literature identifying health factors correlated or associated with energy drinks by identifying the causal effect on energy drink consumption on Body Mass Index (BMI).
+
+This research will seek to identify causation through conditional random assignment as an identification strategy and the Ordinary Least Squares (OLS) method for estimation. Based on known associations with Body Mass Index, controls will be added to obtain conditional random assignment of energy drink consumption. Data from the August 2021 through August 2023 National Health and Nutrition Examination Survey (NHANES) has collected, cleansed, reorganized, and analyzed to create multiple models of energy drinks regressed on BMI. Analysis of the regression results in contrast with existing literature and an investigation of concerns such as omitted variable bias, prevents a causal relationship between energy drinks and BMI from being identified through this research. However, this research supports recent media outputs, linking energy drinks with negative health outcomes, with energy drink consumption indicating an increase in BMI.
+
+\section{Literature Review}
+
+Previous existing literature has attempted to add clarity on energy drinks in a few differing ways. Rush et.\ al.\ investigated the immediate microscopic physiological effect of energy drinks through measured fat oxidation and lipogenesis. Through a randomized trial of 10 healthy women, assigned either lemonade or an energy drink, researchers found that those assigned to the energy drink group had a significant increase in fat creation \citep{rush2006}. In contrast, Tabirzi et.\ al.\ examined a variety of caffeine sources on longer-term health effects, to include BMI. While energy drinks were not the sole source of caffeine, their meta-analysis of randomized controlled trials concluded that caffeine intake promoted BMI reduction. This research will explore the neglected middle ground between the studies, by exploring energy drinks as a specific source of caffeine, and looking at the aggregated effects, not just the immediate physiological effects on the body.
+
+Associations between energy drinks and other factors that may influence BMI have been researched. Markon et al.'s multivariable-adjusted logistic regression analysis of energy drinks identified that demographic and lifestyle controls such as, smoking, race, sex, and higher education levels, were associated with increased energy drink consumption. Alternatively, the study indicated that factors such as marital status, and physical activity lacked consistent association with energy drink consumption \citep{markon2023}. This research will utilize these identified associations as controls in an attempt to obtain conditional random assignment of energy drink consumption.
+
+The previous studies all utilize statistical analysis or random assignments for identifying causal inference. Kurz and K\"{o}nig, along with Richards and Hamilton, utilize econometrics techniques to find causality with related subject matter. Kurz and K\"{o}nig investigated the impact of sugar taxes on soft drinks through synthetic controls approach in Hungary and France. While their study does not strictly look at energy drinks, their classification of ``Sugar-sweetened beverages'' does contain energy drinks. Through their analysis, they discovered a difference between the two nations. France saw a slight decrease in sales after the tax was instated, while overall soft drink sales still increased. In Hungary, there was only a short-term decrease in sales, which led to a increase in sales after two years. While the results differ, the overall implications can be generalized--- adding a sugar tax does not achieve its goals of reducing consumption. This paper will utilize this principle in determining or excluding policy implications of the researcher's findings \citep{kurz2021}.
+
+Richards and Hamilton explore obesity and hyperbolic discounting (bias of valuing immediate rewards over larger delayed rewards) by measuring BMI and alcohol consumption levels along with the hyperbolic discounting levels. The researchers fit various models with demographic attributes and patterns of behavior as controls and compare them to define the best model. While their experimental set up does not warrant causality, due the controlled setting and bias reduction, it approximates causality. As it applies to this paper, those who have higher BMI's may be more likely to engage in long-term risky behavior for short-term gains, such as consuming energy drinks or smoking, despite potential health concern. This paper will investigate this claim by including smoking as a control and identifying whether the consumption of energy drinks shares the explanatory power on BMI \citep{richards2012}.
+
+\section{Background, Data and Sample Evolution}
+
+The source of data for this research is from The National Health and Nutrition Examination Survey (NHANES) collected over August 2021 through August 2023. The NHANES sample represents noninstitutionalized civilian population within the 50 states (to include the District of Columbia). The sample design consists of multi-year, stratified, clustered four-stage samples. Focusing on health outcomes, NHANES oversamples individuals predisposed to larger health complications, such as children, individuals aged 60 and older, African Americans, Asians, and Hispanics \citep{cdc2023}. To account for this, sample weights were utilized to give equal representation across observations.
+
+A refined dataset was created by combining Dietary, Demographic, Examinations, and Questionnaire subsets of the NHANES through collapsing on unique sequence numbers. Due to health concerns, Dietary, Demographic, and Questionnaire data was collected over the phone due to COVID-19 concerns. However, Examination data was taken in-person by a smaller subset of individuals. The data contained in this subset is critical to the formulation of the econometric model, therefore data was limited to only those who opted into an in-person examination \citep{cdc2023}. It is reasonably assumed that individuals agreed to the examination randomly, with their decision having no impact on other variables in the econometric model. The dataset was also restricted to a certain age range, with the final sample only including individuals aged 18 to 64 years old, resulting in a sample size of $n=4266$.
+
+Energy drink consumption was determined based off of the Individual Food surveys within the Dietary section of NHANES. In this section, participants are asked to detail all dietary intake and amount from the previous day, to include beverages such as energy drinks. This question was asked on two separate days, and dietary intake was then combined. All intake was indexed with a USDA food code. All descriptions of the USDA food codes classified as ``Energy Drinks'' are shown in Table~\ref{tab:products}. If an individual consumed any of the products classified as an ``Energy Drink'', during either day (regardless of quantity), they were identified as an ``Energy Drinker''. There was no special consideration or weight given to participants who had indicated the consumption of multiple energy drinks over the two-day span due to the limited proportion of participants identified as energy drinkers as a whole. This definition of energy drinker assumes that the two days of the survey reflect a normal diet for the individual.
+
+\input{tables/table1}
+
+While energy consumption was transformed into cross-sectional data, all other variables were naturally recorded in that state, with all outcomes based off a single point in time. Demographic variables included are age, gender (limited to Male and Female) and race (compiled into five categories--- White, Black, Asian, Hispanic, or Other). Social factors included marital status (split into categories of Married, Never Married, Formerly Married, or Missing Married Information for those who decline or did not respond) and education (categorized as having either a High School Education or Less, High School Education or more, or Missing Educational Data for those who declined or did not respond). Additional lifestyle variables included military service (based on whether or not someone served in active-duty military regardless of branch at any point in time), and Smoker (quantified as only who smoked over 100 cigarettes in their lifetime in order to include individuals who previously used to smoke and exclude individuals who have had single usage experiences). Ideally, location or regional controls would be used, however respondents' location data is restricted and not available to the public.
+
+\input{tables/table2}
+
+According to the difference in group means, those who drink energy drinks on average have a .73-point higher BMI, however, this difference was not statistically significant. The total BMI average of the sample of 29.50 is slightly higher than the overall US average BMI of 29.2 \citep{young2023}. Notable differences between energy consumption groups include age, gender, smoker, military service, and some race and marriage statuses. While there is no significant association between energy drink consumption and BMI, the associations between energy drink consumption and characteristics prompt further investigation into whether energy drinks are causal on BMI causation after controls are added in a regression.
+
+\section{Econometric Theory and Econometric Model}
+
+\begin{equation}
+\label{eq:model}
+\begin{aligned}
+\text{BMI}_i &= \alpha + \gamma \, \text{EnergyDrink}_i + \delta \, \text{Age}_i + \rho \, \text{Male}_i \\
+&\quad + \sum_{j=1}^{4} \eta_j \, \text{Race}_{ij} + \sum_{k=1}^{3} \theta_k \, \text{MaritalStatus}_{ik} \\
+&\quad + \kappa \, \text{HS\_EducationOrLess}_i + \lambda \, \text{MissingEducationData}_i \\
+&\quad + \mu \, \text{MilitaryService}_i + \nu \, \text{Smoker}_i + e_i
+\end{aligned}
+\end{equation}
+
+The coefficient of interest from the econometric model is $\gamma$, the effect of drinking energy drinks after controlling for all other specified variables. The fixed effect of marital status is represented by $\theta_k$, accounting for average differences in marriage status across individuals. The fixed effects of race are represented by $\eta_j$, accounting for the average differences in race across individuals.
+
+In order for the variable of interest, $\gamma$, to be the best linear unbiased estimator (BLUE), Gauss-Markov's Multilinear Regression Assumptions (MLR) 1--5 must hold.
+
+\textbf{MLR.1 (Linear in Parameters):} The model in the population can be written as Equation~\ref{eq:model}, where $\alpha, \gamma, \delta, \rho, \eta_j, \theta_k, \kappa, \lambda, \mu, \nu$ are the unknown parameters of interest and $e_i$ is an unobserved random error.
+
+\textbf{MLR.2 (Random Sampling):} A random sample of $n$ observations, $\{(\text{BMI}_i, \text{EnergyDrink}_i, \text{Age}_i, \ldots, \text{Smoker}_i): i = 1, 2, \ldots, n\}$, following the population model in MLR.1, is available. The NHANES data is a stratified, clustered sample that oversamples certain populations. Sampling weights are applied to account for the complex survey design, making the weighted sample representative of the noninstitutionalized U.S.\ civilian population.
+
+\textbf{MLR.3 (No Perfect Collinearity):} In the sample, none of the independent variables is constant and there are no exact linear relationships among the independent variables. Given the construction of the variables, the indicator variables for race sum to one when the reference category (White) is included; dropping White from the regression avoids perfect collinearity. The same logic applies to marital status (Married is the reference) and education (Some College or more is the reference). Female is excluded as the reference for gender. No other exact linear dependencies exist among the regressors.
+
+\textbf{MLR.4 (Zero Conditional Mean):} The error $e_i$ has an expected value of zero given any values of the independent variables: $E(e_i | \text{EnergyDrink}_i, \text{Age}_i, \ldots, \text{Smoker}_i) = 0$. This is the critical assumption for a causal interpretation of $\gamma$. If there exist omitted variables that are correlated with both energy drink consumption and BMI, then MLR.4 fails and $\gamma$ captures the omitted variable bias in addition to the true causal effect. Physical activity is a leading candidate for such an omitted variable: it plausibly affects BMI and may be correlated with energy drink consumption. Without a direct control for physical activity in the model, the zero conditional mean assumption cannot be confirmed, and the estimate of $\gamma$ should be interpreted as an association rather than a causal effect.
+
+\textbf{MLR.5 (Homoskedasticity):} The error $e_i$ has the same variance given any values of the explanatory variables: $\text{Var}(e_i | \text{EnergyDrink}_i, \text{Age}_i, \ldots, \text{Smoker}_i) = \sigma^2$. In practice, heteroskedasticity is common in cross-sectional health data, so robust (heteroskedasticity-consistent) standard errors are employed in estimation to ensure valid inference regardless of whether this assumption holds exactly.
+
+\section{Results and Discussion of Empirical Findings}
+
+\input{tables/table3}
+
+Table~\ref{tab:regression} presents regression estimates across four progressively controlled models examining the relationship between energy drink consumption and BMI. All models use OLS with robust standard errors and NHANES sampling weights.
+
+\textbf{Model 1} includes only the energy drink indicator. The coefficient of 1.79 ($p < 0.001$) indicates that, without any controls, individuals who consumed energy drinks have a BMI approximately 1.79 points higher than non-consumers. This mirrors the unconditional difference in group means reported in Table~\ref{tab:summary}, though the regression coefficient is larger because the weighted estimation adjusts for the complex survey design.
+
+\textbf{Model 2} adds demographic controls: age, gender, and race/ethnicity (with White and Female as reference categories). The energy drink coefficient remains significant at 1.65 ($p < 0.01$). Age is positively associated with BMI ($0.09$, $p < 0.001$), consistent with known age-related weight gain. Among race categories, being Black is associated with a 2.10-point higher BMI relative to Whites, while being Asian is associated with a 4.25-point lower BMI. Gender (Male) is not statistically significant.
+
+\textbf{Model 3} further adds marital status and education controls. The energy drink coefficient increases slightly to 1.90 ($p < 0.001$). Being never married is associated with a lower BMI ($-0.71$, $p < 0.05$) relative to married individuals. Having a high school education or less is associated with a 0.83-point higher BMI ($p < 0.001$) compared to those with some college or more.
+
+\textbf{Model 4} is the full specification, adding military service and smoking. The energy drink coefficient is 1.83 ($p < 0.001$), indicating that after controlling for all observable demographic and lifestyle factors, energy drink consumers have a BMI that is 1.83 points higher. Military service is positively associated with BMI ($1.14$, $p < 0.05$), potentially reflecting post-service weight gain. Smoking is not statistically significant ($0.02$, $p > 0.10$). The $R^2$ increases modestly from 0.003 in Model 1 to 0.079 in Model 4, indicating that the included controls explain a small but meaningful share of BMI variation.
+
+The stability of the energy drink coefficient across all four models---ranging from 1.65 to 1.90---is noteworthy. The addition of controls that are themselves significantly associated with both energy drink consumption and BMI (such as age, race, and education) does not substantially attenuate the coefficient. This stability suggests that the association is not driven by observable confounders included in the model. However, it does not rule out omitted variable bias from unobserved factors.
+
+The most plausible source of omitted variable bias is physical activity. NHANES collects physical activity data through a separate questionnaire, but the relevant variables were not included in this analysis. If energy drink consumers are systematically less (or more) physically active than non-consumers, the energy drink coefficient would capture this difference in addition to any direct effect of energy drinks on BMI. The direction of this bias is ambiguous: energy drinks are marketed toward active individuals (suggesting consumers may be more active, which would bias $\gamma$ downward), but they are also associated with sedentary behaviors such as gaming \citep{poulos2015}, which would bias $\gamma$ upward.
+
+Social desirability bias in self-reported dietary intake is another concern \citep{grimm2010}. If individuals with higher BMI systematically underreport energy drink consumption, the true association could be even larger than estimated. Conversely, if the two-day dietary recall fails to capture habitual consumption patterns, measurement error in the energy drink variable would attenuate the coefficient toward zero, suggesting the true effect may be understated.
+
+\section{Discussion and Conclusion}
+
+This research investigated the relationship between energy drink consumption and Body Mass Index using data from the 2021--2023 NHANES. Across all model specifications, energy drink consumption is associated with a statistically significant and economically meaningful increase in BMI, on the order of 1.65 to 1.90 points. This finding is robust to the inclusion of demographic controls (age, gender, race), social controls (marital status, education), and lifestyle controls (military service, smoking).
+
+The magnitude of the association is noteworthy. A 1.83-point increase in BMI (the full model estimate) is approximately one-quarter of a standard deviation of BMI in the sample. For an individual of average height (5'9''), this corresponds to roughly 12.5 additional pounds. While this is an association and not a proven causal effect, the consistency of the estimate across specifications strengthens the finding.
+
+The inability to establish causality is the primary limitation of this research. The conditional independence assumption (MLR.4) cannot be verified without controls for physical activity, dietary composition beyond energy drinks, and other lifestyle factors. Future research should incorporate these variables. Additionally, the cross-sectional nature of the data precludes analysis of how changes in energy drink consumption affect changes in BMI over time. A panel data approach or instrumental variables strategy would be needed to move closer to causal identification.
+
+Despite these limitations, this research contributes to the growing literature on energy drinks and health outcomes by providing evidence of a robust association between energy drink consumption and higher BMI in a nationally representative sample. The findings support concerns raised in recent media reporting about the health effects of energy drinks \citep{hetter2024} and are consistent with the physiological mechanisms identified by \citet{rush2006}, who found that energy drink consumption increased fat creation. Policy implications are tempered by the findings of \citet{kurz2021}, who showed that sugar taxes on soft drinks (including energy drinks) had limited long-term effects on consumption, suggesting that taxation alone may not address the health concerns identified here.
+
+\bibliography{references}
+
+\end{document}

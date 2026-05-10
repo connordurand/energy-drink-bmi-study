@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Energy Drinks and BMI: Aggregated Effects of Energy Drink Consumption on Physical Health</title>
+  <meta name="description" content="OLS regression analysis of the association between energy drink consumption and BMI using 2021–2023 NHANES data. n=4,266. Connor Durand, West Point.">
+  <meta name="author" content="Connor Durand">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: #1a1a1a;
+      background: #fff;
+      padding: 0 1.5rem;
+    }
+
+    .page {
+      max-width: 740px;
+      margin: 0 auto;
+    }
+
+    nav {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 0.82rem;
+      color: #999;
+      padding: 1.5rem 0 1.25rem;
+      border-bottom: 1px solid #e8e8e8;
+      margin-bottom: 3.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav a { color: #555; text-decoration: none; }
+    nav a:hover { text-decoration: underline; }
+    nav .sep { color: #bbb; margin: 0 0.4rem; }
+
+    .header { margin-bottom: 2.5rem; }
+
+    .header h1 {
+      font-size: 1.85rem;
+      font-weight: 600;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+      margin-bottom: 1rem;
+    }
+
+    .byline {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 0.88rem;
+      color: #555;
+      line-height: 1.65;
+    }
+
+    .abstract {
+      border-left: 3px solid #d8d8d8;
+      padding-left: 1.25rem;
+      color: #333;
+      font-size: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    .abstract .label {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 0.73rem;
+      font-weight: 500;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: #aaa;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    section { margin-bottom: 2.5rem; }
+
+    h2 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      margin-top: 2.75rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid #e8e8e8;
+    }
+
+    p { margin-bottom: 1rem; }
+    p:last-child { margin-bottom: 0; }
+
+    a {
+      color: #1a1a1a;
+      text-decoration: underline;
+      text-decoration-color: #ccc;
+      text-underline-offset: 2px;
+    }
+    a:hover { text-decoration-color: #1a1a1a; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border: 1px solid #e8e8e8;
+      border-radius: 4px;
+      margin: 1.75rem 0;
+      font-family: 'Inter', system-ui, sans-serif;
+      overflow: hidden;
+    }
+
+    .stat {
+      padding: 1.1rem 1.15rem;
+      border-right: 1px solid #e8e8e8;
+    }
+    .stat:last-child { border-right: none; }
+
+    .stat-val {
+      font-size: 1.25rem;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+
+    .stat-lbl {
+      font-size: 0.73rem;
+      color: #888;
+      line-height: 1.45;
+    }
+
+    figure { margin: 2rem 0; }
+
+    figure img {
+      width: 100%;
+      border: 1px solid #e0e0e0;
+      border-radius: 3px;
+      display: block;
+    }
+
+    figcaption {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 0.81rem;
+      color: #666;
+      margin-top: 0.65rem;
+      line-height: 1.55;
+    }
+
+    figcaption strong { color: #444; }
+
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 0.87rem;
+      margin: 1.5rem 0;
+    }
+
+    .results-table th {
+      text-align: left;
+      font-weight: 500;
+      font-size: 0.76rem;
+      color: #777;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.45rem 0.75rem;
+      border-bottom: 2px solid #1a1a1a;
+    }
+
+    .results-table td {
+      padding: 0.55rem 0.75rem;
+      border-bottom: 1px solid #eee;
+    }
+
+    .results-table tr.winner td {
+      background: #f0f4ff;
+      font-weight: 500;
+    }
+
+    .results-table tr:last-child td { border-bottom: none; }
+    .results-table td:not(:first-child) { font-variant-numeric: tabular-nums; }
+
+    .callout {
+      background: #f8f8f8;
+      border-left: 3px solid #aaa;
+      padding: 1rem 1.25rem;
+      font-size: 0.97rem;
+      color: #333;
+      margin: 1.5rem 0;
+      font-style: italic;
+    }
+
+    .citation {
+      background: #f8f8f8;
+      border: 1px solid #e8e8e8;
+      border-radius: 4px;
+      padding: 1.2rem 1.5rem;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 0.86rem;
+      color: #555;
+      margin: 1.5rem 0;
+      line-height: 1.65;
+    }
+
+    .citation .paper-title {
+      font-weight: 500;
+      color: #1a1a1a;
+      margin-bottom: 0.35rem;
+    }
+
+    .links {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 0.87rem;
+      margin: 1.25rem 0;
+    }
+
+    .links a {
+      color: #1a1a1a;
+      text-decoration: none;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 1px;
+    }
+    .links a:hover { border-color: #1a1a1a; }
+
+    footer {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 0.79rem;
+      color: #aaa;
+      border-top: 1px solid #e8e8e8;
+      padding: 2rem 0 3rem;
+      margin-top: 4rem;
+      line-height: 1.65;
+    }
+
+    @media (max-width: 560px) {
+      .stats { grid-template-columns: 1fr 1fr; }
+      .stat:nth-child(2) { border-right: none; }
+      .stat:nth-child(1),
+      .stat:nth-child(2) { border-bottom: 1px solid #e8e8e8; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <nav>
+    <div>
+      <a href="https://github.com/connordurand">connordurand</a>
+      <span class="sep">/</span>
+      energy-drink-bmi-study
+    </div>
+    <a href="https://github.com/connordurand/energy-drink-bmi-study">GitHub</a>
+  </nav>
+
+  <div class="header">
+    <h1>Do Energy Drinks Make You Heavier?</h1>
+    <div class="byline">
+      Connor Durand<br>
+      Department of Social Sciences, United States Military Academy, West Point, NY
+    </div>
+  </div>
+
+  <div class="abstract">
+    <span class="label">Abstract</span>
+    Energy drink consumption is rising alongside obesity rates in the United States. Using
+    2021–2023 NHANES data (n&nbsp;=&nbsp;4,266) and OLS with sampling weights, this study estimates
+    the association between energy drink consumption and BMI after controlling for age, gender,
+    race, marital status, education, military service, and smoking. Energy drink consumers had a
+    BMI approximately <strong>1.83 points higher</strong> than non-consumers in the full model
+    (p&nbsp;&lt;&nbsp;0.001), roughly equivalent to 12.5 additional pounds at average height.
+    The coefficient was stable across all four model specifications. Causality cannot be established
+    without physical activity controls, but the association is robust and economically meaningful.
+  </div>
+
+  <section>
+    <div class="stats">
+      <div class="stat">
+        <span class="stat-val">4,266</span>
+        <span class="stat-lbl">Adults aged 18–64 in the analysis (with in-person exam)</span>
+      </div>
+      <div class="stat">
+        <span class="stat-val">+1.83</span>
+        <span class="stat-lbl">BMI points higher for energy drink consumers (full model, p&lt;0.001)</span>
+      </div>
+      <div class="stat">
+        <span class="stat-val">~12.5 lbs</span>
+        <span class="stat-lbl">Equivalent weight for a person of average height (5'9")</span>
+      </div>
+      <div class="stat">
+        <span class="stat-val">$73.8B</span>
+        <span class="stat-lbl">Global energy drink market in 2023, growing at 7.9%/yr</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Background and Motivation</h2>
+    <p>
+      The global energy drink market reached $73.81 billion in 2023 and is projected to grow by
+      7.9% annually through 2030. At the same time, U.S. obesity rates have climbed steadily —
+      obesity accounted for an estimated 6.76% of U.S. GDP ($1.4 trillion) in 2018 alone.
+    </p>
+    <p>
+      Prior work tells conflicting stories. A randomized trial by Rush et al. found that energy
+      drink consumption significantly increased fat creation at the cellular level. A meta-analysis
+      by Tabrizi et al. suggested that caffeine intake generally promoted BMI reduction, but
+      energy drinks were not the sole caffeine source. This study targets the neglected middle
+      ground: the aggregated, real-world association between energy drinks as a specific product
+      and BMI in a nationally representative sample.
+    </p>
+    <div class="callout">
+      Two concurrent trends (rising energy drink sales and rising obesity) don't prove a
+      connection. This study asks how much of the association survives after controlling for who
+      drinks energy drinks in the first place.
+    </div>
+  </section>
+
+  <section>
+    <h2>Data</h2>
+    <p>
+      Data came from the August 2021–August 2023 National Health and Nutrition Examination Survey
+      (NHANES). NHANES uses a multi-year stratified clustered design and oversamples populations
+      predisposed to health complications (children, adults 60+, African Americans, Asians,
+      Hispanics). Sampling weights were applied throughout to produce nationally representative
+      estimates.
+    </p>
+    <p>
+      The final sample was restricted to adults aged 18–64 who completed an in-person examination
+      (necessary for BMI measurement), yielding <strong>n&nbsp;=&nbsp;4,266</strong>. Dietary,
+      Demographic, Examination, and Questionnaire subsets were merged on unique respondent
+      sequence numbers.
+    </p>
+    <p>
+      <strong>Energy drink consumption</strong> was determined from the two-day Individual Foods
+      dietary recall. Respondents who consumed any USDA food-code product classified as an "Energy
+      Drink" on either day were coded as consumers, regardless of quantity. Controls included age,
+      gender (male/female), race (five categories), marital status (four categories), education
+      (high school or less vs. some college or more), military service (active duty, any branch),
+      and smoking (100+ lifetime cigarettes).
+    </p>
+
+    <figure>
+      <img src="assets/image1.png" alt="Table: USDA energy drink product classifications">
+      <figcaption>
+        <strong>Table 1.</strong> USDA food codes classified as "Energy Drinks" in the NHANES
+        dietary recall. Any consumption on either survey day identified a respondent as an energy
+        drink consumer.
+      </figcaption>
+    </figure>
+
+    <figure>
+      <img src="assets/image2.png" alt="Summary statistics by energy drink consumption group">
+      <figcaption>
+        <strong>Table 2.</strong> Summary statistics by energy drink consumption status.
+        Energy drink consumers had a mean BMI 0.73 points higher than non-consumers, though this
+        raw difference was not statistically significant. Notable differences in age, gender,
+        smoking, and military service motivated controlling for these variables in regression.
+      </figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>Econometric Model</h2>
+    <p>
+      The core model regresses BMI on energy drink consumption and a growing set of controls
+      across four progressively specified OLS models:
+    </p>
+    <p style="font-family:'Inter',sans-serif; font-size:0.9rem; background:#f8f8f8; padding:0.9rem 1.1rem; border-radius:3px; line-height:1.8;">
+      BMI<sub>i</sub> = α + γ·EnergyDrink<sub>i</sub> + δ·Age<sub>i</sub> + ρ·Male<sub>i</sub>
+      + Σ η<sub>j</sub>·Race<sub>ij</sub> + Σ θ<sub>k</sub>·MaritalStatus<sub>ik</sub>
+      + κ·HS_EducationOrLess<sub>i</sub> + μ·MilitaryService<sub>i</sub> + ν·Smoker<sub>i</sub> + e<sub>i</sub>
+    </p>
+    <p>
+      The coefficient of interest is <strong>γ</strong>: the effect of energy drink consumption
+      on BMI after accounting for all other predictors. All models use robust (heteroskedasticity-consistent)
+      standard errors and NHANES sampling weights. Reference categories are White, Female, and
+      Married.
+    </p>
+    <p>
+      The critical assumption for causal interpretation (MLR.4, zero conditional mean) cannot be
+      confirmed without a control for physical activity, which was not included in this analysis.
+      The coefficient γ should therefore be interpreted as an <em>association</em>, not a
+      causal effect.
+    </p>
+  </section>
+
+  <section>
+    <h2>Results</h2>
+
+    <table class="results-table">
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Controls</th>
+          <th>γ (Energy Drink)</th>
+          <th>p-value</th>
+          <th>R²</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Model 1</td>
+          <td>None</td>
+          <td>1.79</td>
+          <td>&lt; 0.001</td>
+          <td>0.003</td>
+        </tr>
+        <tr>
+          <td>Model 2</td>
+          <td>Age, gender, race</td>
+          <td>1.65</td>
+          <td>&lt; 0.01</td>
+          <td>0.058</td>
+        </tr>
+        <tr>
+          <td>Model 3</td>
+          <td>+ Marital status, education</td>
+          <td>1.90</td>
+          <td>&lt; 0.001</td>
+          <td>0.071</td>
+        </tr>
+        <tr class="winner">
+          <td>Model 4</td>
+          <td>+ Military service, smoking</td>
+          <td>1.83</td>
+          <td>&lt; 0.001</td>
+          <td>0.079</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>
+      The energy drink coefficient remained statistically significant across all four specifications,
+      ranging from 1.65 to 1.90 BMI points. The stability of γ through the progressive addition of
+      controls, including controls that are themselves correlated with both energy drinks and BMI,
+      suggests the association is not driven by observable confounders in the model.
+    </p>
+
+    <div class="callout">
+      A 1.83-point increase in BMI is about one-quarter of a standard deviation in the sample.
+      For a person of average height (5'9"), that is roughly 12.5 additional pounds.
+    </div>
+
+    <p>
+      Among the control variables in Model 4, <strong>age</strong> (β&nbsp;=&nbsp;0.09,
+      p&nbsp;&lt;&nbsp;0.001), <strong>being Black</strong> (β&nbsp;=&nbsp;+2.10 relative to
+      White), <strong>being Asian</strong> (β&nbsp;=&nbsp;−4.25), and <strong>having high school
+      education or less</strong> (β&nbsp;=&nbsp;+0.83, p&nbsp;&lt;&nbsp;0.001) were all significant.
+      <strong>Military service</strong> was positively associated with BMI (β&nbsp;=&nbsp;+1.14,
+      p&nbsp;&lt;&nbsp;0.05), potentially reflecting post-service weight gain. Smoking was not
+      statistically significant.
+    </p>
+
+    <figure>
+      <img src="assets/image3.png" alt="Regression results table across four model specifications">
+      <figcaption>
+        <strong>Table 3.</strong> OLS regression results for all four model specifications.
+        Robust standard errors. NHANES sampling weights applied. Energy drink coefficient is
+        highlighted across models to illustrate its stability.
+      </figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>Limitations and Omitted Variable Bias</h2>
+
+    <p>
+      The leading omitted variable concern is <strong>physical activity</strong>. If energy drink
+      consumers are systematically more or less active than non-consumers, the coefficient γ
+      captures that difference in addition to any direct effect of energy drinks on BMI. The
+      direction of the bias is ambiguous: energy drinks are marketed to active consumers (which
+      would bias γ downward), but are also associated with sedentary behaviors like gaming (which
+      would bias γ upward).
+    </p>
+    <p>
+      A secondary concern is <strong>social desirability bias</strong> in dietary self-report.
+      If higher-BMI respondents systematically underreport energy drink consumption, the true
+      association could be even larger than estimated. Conversely, the two-day recall window may
+      miss habitual consumption patterns, attenuating the estimate toward zero.
+    </p>
+    <p>
+      The cross-sectional design precludes analysis of how changes in consumption affect changes
+      in BMI over time. A panel data approach or instrumental variables strategy (for instance,
+      using local energy drink advertising exposure as an instrument) would be needed to move
+      closer to causal identification.
+    </p>
+  </section>
+
+  <section>
+    <h2>Discussion</h2>
+
+    <p>
+      Across all four model specifications, energy drink consumption was associated with a
+      statistically significant and economically meaningful increase in BMI. The finding is
+      consistent with cellular-level evidence from Rush et al. (fat creation increased after
+      energy drink consumption in a randomized trial) and with media reporting on energy drink
+      health risks.
+    </p>
+    <p>
+      Policy implications are tempered by the findings of Kurz and König, who showed that sugar
+      taxes on soft drinks had limited long-term effects on consumption in France and Hungary.
+      If taxation alone does not curb energy drink use, the health burden identified here may
+      prove difficult to address through price mechanisms.
+    </p>
+    <p>
+      Future research should incorporate physical activity controls, use a longer NHANES panel,
+      and explore instrumental variables strategies. The consistent positive association found
+      here across specifications, however, provides a strong motivation for that next step.
+    </p>
+  </section>
+
+  <section>
+    <h2>Repository</h2>
+
+    <div class="citation">
+      <div class="paper-title">Energy Drinks and Body Mass Index: Aggregated Effects of Energy Drink Consumption on Physical Health</div>
+      Durand, C. Course paper for SS368 Econometrics, United States Military Academy,
+      West Point, NY (2024). Data: NHANES 2021–2023 (n&nbsp;=&nbsp;4,266). Analysis in Stata.
+    </div>
+
+    <div class="links">
+      <a href="https://github.com/connordurand/energy-drink-bmi-study">Source code &amp; data</a>
+    </div>
+  </section>
+
+  <footer>
+    Connor Durand, United States Military Academy, West Point, NY.<br>
+    Views expressed are the author's own and do not represent the Department of Social Sciences,
+    the United States Military Academy, the United States Army, or the Department of Defense.
+  </footer>
+
+</div>
+</body>
+</html>
